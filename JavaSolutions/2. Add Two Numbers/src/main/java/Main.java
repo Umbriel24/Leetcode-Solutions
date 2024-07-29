@@ -8,11 +8,19 @@ class Main {
         Solution solution = new Solution();
 
 
-        ListNode a1 = new ListNode(0);
+        ListNode a7 = new ListNode(9);
+        ListNode a6 = new ListNode(9, a7);
+        ListNode a5 = new ListNode(9, a6);
+        ListNode a4 = new ListNode(9, a5);
+        ListNode a3 = new ListNode(9, a4);
+        ListNode a2 = new ListNode(9, a3);
+        ListNode a1 = new ListNode(9, a2);
 
 
-
-        ListNode b1 = new ListNode(0);
+        ListNode b4 = new ListNode(9);
+        ListNode b3 = new ListNode(9, b4);
+        ListNode b2 = new ListNode(9, b3);
+        ListNode b1 = new ListNode(9, b2);
 
         ListNode test = solution.addTwoNumbers(a1, b1);
         System.out.println(test.next.val);
@@ -98,8 +106,7 @@ class Solution {
         int[] arraySomma = arraySomma(array1, array2, arrayMaggiore);
 
         //Crea Listnode
-        ListNode resultListnode = CreaListnode(arraySomma, new ListNode(), 0);
-        return resultListnode;
+        return CreaListnode(arraySomma, new ListNode(), 0);
 
 
     }
@@ -117,32 +124,44 @@ class Solution {
     }
 
     private int[] arraySomma(int[] n1, int[] n2, int conteggio) {
-        int[] tempInt = new int[conteggio];
+        int[] tempInt;
+
+        if(n1[n1.length - 1] == 9 || n2[n2.length - 1] == 9) {
+            tempInt = new int[conteggio + 1];
+        } else {
+            tempInt = new int[conteggio];
+        }
+
         int riporto = 0;
 
 
-        for (int i = 0; i < conteggio; i++) {
 
+        for (int i = 0; i <= conteggio; i++) {
+
+            //check se esiste solo uno degli array
             if (n1.length - 1 < i) {
                 //vuol dire che n1 ha meno numeri di n2
-                tempInt[i] = n2[i] + riporto;
-                riporto = 0;
-            } else if (n2.length -1  < i) {
-                tempInt[i] = n1[i] + riporto;
-                riporto = 0;
+                if(n2.length < i && riporto != 0) {
+                    tempInt[i] = riporto;
+                } else {
+                    tempInt[i] = n2[i] + riporto;
+                    riporto = 0;
+                }
 
-            }
-            else
-            {
-                if(riporto != 0){
-                    n1[i]++;
+            } else if (n2.length - 1 < i) {
+                tempInt[i] = (n1[i] + riporto) % 10;
+                riporto = (n1[i] + riporto)/ 10;
+
+            } else {
+                if (riporto != 0) {
+                    n1[i] += riporto;
                     riporto = 0;
                 }
                 if (n1[i] + n2[i] >= 10 && n1[i] + n2[i] < 100) { //27
                     tempInt[i] = ((n1[i] + n2[i]) % 10);
                     riporto = (n1[i] + n2[i]) / 10;
                 } else if (n1[i] + n2[i] >= 100) {
-                    tempInt[i] = ((n1[i] + n2[i]) % 100) ;
+                    tempInt[i] = ((n1[i] + n2[i]) % 100);
                     riporto = (n1[i] + n2[i]) / 100;
                 } else if (n1[i] + n2[i] < 10) {
                     tempInt[i] = n1[i] + n2[i];
@@ -155,23 +174,38 @@ class Solution {
     private ListNode CreaListnode(int[] arraySomma, ListNode tempListnode, int conteggio) {
         tempListnode.val = arraySomma[conteggio];
 
-        if(arraySomma.length == 1) {
+        if (arraySomma.length == 1) {
             return tempListnode;
         }
-        tempListnode.next = creaNextListnode(conteggio + 1, arraySomma);
+        tempListnode.next = creaNextListnode(conteggio + 1, arraySomma, 0);
 
         //
 
         return tempListnode;
     }
 
-    private ListNode creaNextListnode(int conteggio, int[] arraySomma) {
+    private ListNode creaNextListnode(int conteggio, int[] arraySomma, int riporto) {
         ListNode tempListnode = new ListNode();
-        tempListnode.val = arraySomma[conteggio];
-        conteggio++;
+
+        if(riporto != 0){
+            arraySomma[conteggio] += riporto;
+        }
+
+        if (arraySomma[conteggio] >= 10 && riporto == 0) {
+            riporto = arraySomma[conteggio] / 10;
+            arraySomma[conteggio] %= 10;
+            tempListnode.val = arraySomma[conteggio];
+        } else if (riporto == 0) {
+            tempListnode.val = arraySomma[conteggio];
+            conteggio++;
+        } else {
+            tempListnode.val = arraySomma[conteggio];
+            conteggio++;
+        }
+
 
         if (conteggio < arraySomma.length) {
-            tempListnode.next = creaNextListnode(conteggio, arraySomma);
+            tempListnode.next = creaNextListnode(conteggio, arraySomma, riporto);
         }
 
         return tempListnode;
