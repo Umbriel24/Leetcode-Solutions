@@ -7,15 +7,12 @@ class Main {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        ListNode a3 = new ListNode(3);
-        ListNode a2 = new ListNode(4, a3);
-        ListNode a1 = new ListNode(2, a2);
+
+        ListNode a1 = new ListNode(0);
 
 
-        ListNode b4 = new ListNode(9);
-        ListNode b3 = new ListNode(4, b4);
-        ListNode b2 = new ListNode(6, b3);
-        ListNode b1 = new ListNode(5, b2);
+
+        ListNode b1 = new ListNode(0);
 
         ListNode test = solution.addTwoNumbers(a1, b1);
         System.out.println(test.next.val);
@@ -158,6 +155,9 @@ class Solution {
     private ListNode CreaListnode(int[] arraySomma, ListNode tempListnode, int conteggio) {
         tempListnode.val = arraySomma[conteggio];
 
+        if(arraySomma.length == 1) {
+            return tempListnode;
+        }
         tempListnode.next = creaNextListnode(conteggio + 1, arraySomma);
 
         //
