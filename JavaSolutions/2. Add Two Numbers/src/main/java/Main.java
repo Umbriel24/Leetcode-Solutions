@@ -8,19 +8,16 @@ class Main {
         Solution solution = new Solution();
 
 
-        ListNode a7 = new ListNode(9);
-        ListNode a6 = new ListNode(9, a7);
-        ListNode a5 = new ListNode(9, a6);
-        ListNode a4 = new ListNode(9, a5);
-        ListNode a3 = new ListNode(9, a4);
-        ListNode a2 = new ListNode(9, a3);
-        ListNode a1 = new ListNode(9, a2);
+
+        ListNode a3 = new ListNode(3);
+        ListNode a2 = new ListNode(4, a3);
+        ListNode a1 = new ListNode(2, a2);
 
 
-        ListNode b4 = new ListNode(9);
-        ListNode b3 = new ListNode(9, b4);
-        ListNode b2 = new ListNode(9, b3);
-        ListNode b1 = new ListNode(9, b2);
+
+        ListNode b3 = new ListNode(4);
+        ListNode b2 = new ListNode(6, b3);
+        ListNode b1 = new ListNode(5, b2);
 
         ListNode test = solution.addTwoNumbers(a1, b1);
         System.out.println(test.next.val);
@@ -112,13 +109,6 @@ class Solution {
     }
 
 
-    private ListNode ListnodeFactory(ListNode tempListnode, int[] numbers, int conteggio) {
-        if (conteggio < numbers.length) {
-            tempListnode.val = numbers[conteggio];
-            return ListnodeFactory(tempListnode, numbers, conteggio + 1);
-        } else return tempListnode;
-    }
-
     private int CheckBiggerArray(int n1, int n2) {
         return Math.max(n1, n2);
     }
@@ -135,17 +125,24 @@ class Solution {
         int riporto = 0;
 
 
-
+        if(n1[n1.length - 1] != 9 || n2[n2.length - 1] != 9) {
+            conteggio--;
+        }
         for (int i = 0; i <= conteggio; i++) {
 
             //check se esiste solo uno degli array
             if (n1.length - 1 < i) {
                 //vuol dire che n1 ha meno numeri di n2
-                if(n2.length < i && riporto != 0) {
+                if(n2.length - 1 < i && riporto != 0) {
                     tempInt[i] = riporto;
                 } else {
-                    tempInt[i] = n2[i] + riporto;
-                    riporto = 0;
+                    if(n2.length - 1 < i) {
+                        tempInt[i] = riporto;
+                        riporto = 0;
+                    } else {
+                        tempInt[i] = n2[i] + riporto;
+                        riporto = 0;
+                    }
                 }
 
             } else if (n2.length - 1 < i) {
