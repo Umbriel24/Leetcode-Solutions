@@ -1,26 +1,94 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class Main {
 
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-
-
-
+    private static void testcase1() {
         ListNode a3 = new ListNode(3);
         ListNode a2 = new ListNode(4, a3);
         ListNode a1 = new ListNode(2, a2);
-
-
 
         ListNode b3 = new ListNode(4);
         ListNode b2 = new ListNode(6, b3);
         ListNode b1 = new ListNode(5, b2);
 
-        ListNode test = solution.addTwoNumbers(a1, b1);
-        System.out.println(test.next.val);
+        Solution sol = new Solution();
+
+        ListNode solListnode = sol.addTwoNumbers(a1, b1);
+        printTestCase(solListnode);
+    }
+
+    private static void testcase2() {
+        ListNode a1 = new ListNode(0);
+        ListNode b1 = new ListNode(0);
+
+        Solution sol = new Solution();
+        ListNode solListnode = sol.addTwoNumbers(a1, b1);
+        printTestCase(solListnode);
+    }
+
+    private static void testcase3() {
+        ListNode a3 = new ListNode(9);
+        ListNode a2 = new ListNode(4, a3);
+        ListNode a1 = new ListNode(2, a2);
+
+
+        ListNode b4 = new ListNode(9);
+        ListNode b3 = new ListNode(4, b4);
+        ListNode b2 = new ListNode(6, b3);
+        ListNode b1 = new ListNode(5, b2);
+
+        Solution solution = new Solution();
+        ListNode solListnode = solution.addTwoNumbers(a1, b1);
+        printTestCase(solListnode);
+    }
+
+    private static void testcase4() {
+        ListNode a7 = new ListNode(9);
+        ListNode a6 = new ListNode(9, a7);
+        ListNode a5 = new ListNode(9, a6);
+        ListNode a4 = new ListNode(9, a5);
+        ListNode a3 = new ListNode(9, a4);
+        ListNode a2 = new ListNode(9, a3);
+        ListNode a1 = new ListNode(9, a2);
+
+        ListNode b4 = new ListNode(9);
+        ListNode b3 = new ListNode(9, b4);
+        ListNode b2 = new ListNode(9, b3);
+        ListNode b1 = new ListNode(9, b2);
+
+        Solution solution = new Solution();
+        ListNode solListnode = solution.addTwoNumbers(a1, b1);
+        printTestCase(solListnode);
+    }
+
+    private static void printTestCase(ListNode listNode) {
+        System.out.print(listNode.val + " ");
+        try {
+            if (listNode.next != null) {
+                printTestCase(listNode.next);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+
+        /*
+
+         */
+        System.out.println("Test case 1: ");
+        testcase1();
+        System.out.println("Test case 2: ");
+        testcase2();
+        System.out.println("Test case 3: ");
+        testcase3();
+        System.out.println("Test case 4: ");
+        testcase4();
+
     }
 }
 
@@ -45,167 +113,124 @@ class ListNode {
 
 class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        //Dobbiamo partire dall'ultimo e andare a retroso
-
-
-        boolean conditionTest = true;
-
-        ListNode list1, list2;
-        list1 = l1;
-        list2 = l2;
-
-        int conteggiolist1 = 0;
-        int conteggiolist2 = 0;
-
-        //Contatore di ListNode oltre l'iniziale
-        while (list1.next != null) {
-            conteggiolist1++;
-            list1 = list1.next;
-        }
-
-        while (list2.next != null) {
-            conteggiolist2++;
-            list2 = list2.next;
-        }
-        //Fine contatore
-
-        //Creazione array con grandezza della ListNode
-        int[] array1 = new int[conteggiolist1 + 1];
-        int[] array2 = new int[conteggiolist2 + 1];
-
-
-        list1 = l1;
-        list2 = l2;
-
-        //allocazione valori nell'array
-        //Array1
-        for (int i = 0; i <= conteggiolist1; i++) {
-            array1[i] = list1.val;
-
-            if (list1.next != null) {
-                list1 = list1.next;
-            }
-        }
-
-        //Array2
-        for (int i = 0; i <= conteggiolist2; i++) {
-            array2[i] = list2.val;
-
-            if (list2.next != null) {
-                list2 = list2.next;
-            }
-        }
-
-        //Check Array più grande
-        int arrayMaggiore = CheckBiggerArray(array1.length, array2.length);
-
-        //Crea array con somma e riporto
-        int[] arraySomma = arraySomma(array1, array2, arrayMaggiore);
-
-        //Crea Listnode
-        return CreaListnode(arraySomma, new ListNode(), 0);
+        ArrayList arraySomma = createArrayFromListnode(l1, l2);
+        System.out.println("Programma finito");
+        return ListNodeCreator(arraySomma);
 
 
     }
 
 
-    private int CheckBiggerArray(int n1, int n2) {
-        return Math.max(n1, n2);
-    }
+    //Metodi
+    private ArrayList createArrayFromListnode(ListNode listnode1, ListNode listnode2) {
+        ArrayList arrayListA = NextListnode(listnode1);
+        ArrayList arrayListB = NextListnode(listnode2);
 
-    private int[] arraySomma(int[] n1, int[] n2, int conteggio) {
-        int[] tempInt;
+        ArrayList arraySomma = fromArrayToSumArray(arrayListA, arrayListB);
 
-        if(n1[n1.length - 1] == 9 || n2[n2.length - 1] == 9) {
-            tempInt = new int[conteggio + 1];
-        } else {
-            tempInt = new int[conteggio];
+        //Debug
+        for (int i = 0; i < arraySomma.size(); i++) {
+            System.out.println(arraySomma.get(i));
         }
 
+        return arraySomma;
+
+    }
+
+    private ArrayList NextListnode(ListNode tempListNode) {
+        ArrayList arraylistTemp = new ArrayList();
+
+        while (tempListNode.next != null) {
+            arraylistTemp.add(tempListNode.val);
+            tempListNode = tempListNode.next;
+        }
+
+        //Aggiungi l'ultimo
+        arraylistTemp.add(tempListNode.val);
+
+        return arraylistTemp;
+    }
+
+    private ArrayList fromArrayToSumArray(ArrayList arrayList1, ArrayList arrayList2) {
+        ArrayList arraySomma = new ArrayList();
         int riporto = 0;
+        int maxArray = Math.max(arrayList1.size(), arrayList2.size());
 
+        for (int i = 0; i < maxArray; i++) {
+            int temp1;
+            int temp2;
 
-        if(n1[n1.length - 1] != 9 || n2[n2.length - 1] != 9) {
-            conteggio--;
-        }
-        for (int i = 0; i <= conteggio; i++) {
+            if (arrayList1.size() > i) {
+                temp1 = (int) arrayList1.get(i);
+            } else temp1 = 0;
 
-            //check se esiste solo uno degli array
-            if (n1.length - 1 < i) {
-                //vuol dire che n1 ha meno numeri di n2
-                if(n2.length - 1 < i && riporto != 0) {
-                    tempInt[i] = riporto;
+            if (arrayList2.size() > i) {
+                temp2 = (int) arrayList2.get(i);
+            } else temp2 = 0;
+
+            int tempSomma = temp1 + temp2 + riporto;
+            riporto = 0;
+
+                if (tempSomma < 10) {
+                    arraySomma.add(tempSomma);
+
+                } else if (tempSomma >= 10 && tempSomma < 100) {
+                    riporto = tempSomma / 10;
+                    arraySomma.add(tempSomma % 10);
                 } else {
-                    if(n2.length - 1 < i) {
-                        tempInt[i] = riporto;
-                        riporto = 0;
-                    } else {
-                        tempInt[i] = n2[i] + riporto;
-                        riporto = 0;
-                    }
-                }
+                    //Riporto di 100
+                    riporto = tempSomma / 100;
+                    arraySomma.add(tempSomma % 100);
 
-            } else if (n2.length - 1 < i) {
-                tempInt[i] = (n1[i] + riporto) % 10;
-                riporto = (n1[i] + riporto)/ 10;
-
-            } else {
-                if (riporto != 0) {
-                    n1[i] += riporto;
-                    riporto = 0;
-                }
-                if (n1[i] + n2[i] >= 10 && n1[i] + n2[i] < 100) { //27
-                    tempInt[i] = ((n1[i] + n2[i]) % 10);
-                    riporto = (n1[i] + n2[i]) / 10;
-                } else if (n1[i] + n2[i] >= 100) {
-                    tempInt[i] = ((n1[i] + n2[i]) % 100);
-                    riporto = (n1[i] + n2[i]) / 100;
-                } else if (n1[i] + n2[i] < 10) {
-                    tempInt[i] = n1[i] + n2[i];
-                }
             }
         }
-        return tempInt;
-    }
 
-    private ListNode CreaListnode(int[] arraySomma, ListNode tempListnode, int conteggio) {
-        tempListnode.val = arraySomma[conteggio];
+        //Controlla se l'ultimo è un n >= 10
+        if ((int)arraySomma.getLast() >= 10 && (int)arraySomma.getLast() < 100){
+            int temp = (int)arraySomma.getLast() ;
+            int checkRiporto = temp / 10;
+            temp = temp % 10;
 
-        if (arraySomma.length == 1) {
-            return tempListnode;
+            arraySomma.removeLast();
+            arraySomma.add(temp);
+            arraySomma.add(checkRiporto);
         }
-        tempListnode.next = creaNextListnode(conteggio + 1, arraySomma, 0);
+        //Controlla se l'ultimo è un n >= 100
+        if ((int)arraySomma.getLast() >= 100){
+            int temp = (int)arraySomma.getLast();
+            int checkRiporto = temp / 100;
+            temp = temp % 100;
 
-        //
-
-        return tempListnode;
-    }
-
-    private ListNode creaNextListnode(int conteggio, int[] arraySomma, int riporto) {
-        ListNode tempListnode = new ListNode();
+            arraySomma.removeLast();
+            arraySomma.add(temp);
+            arraySomma.add(checkRiporto);
+        }
 
         if(riporto != 0){
-            arraySomma[conteggio] += riporto;
+            arraySomma.add(riporto);
         }
-
-        if (arraySomma[conteggio] >= 10 && riporto == 0) {
-            riporto = arraySomma[conteggio] / 10;
-            arraySomma[conteggio] %= 10;
-            tempListnode.val = arraySomma[conteggio];
-        } else if (riporto == 0) {
-            tempListnode.val = arraySomma[conteggio];
-            conteggio++;
-        } else {
-            tempListnode.val = arraySomma[conteggio];
-            conteggio++;
-        }
-
-
-        if (conteggio < arraySomma.length) {
-            tempListnode.next = creaNextListnode(conteggio, arraySomma, riporto);
-        }
-
-        return tempListnode;
+        return arraySomma;
     }
 
+    private ListNode ListNodeCreator(ArrayList arraylist) {
+        ListNode tempListNode = new ListNode();
+        tempListNode.val = (int) arraylist.getFirst();
+
+        if (arraylist.size() > 1) {
+            tempListNode.next = ListnodeFactory(arraylist, 1);
+        }
+        return tempListNode;
+    }
+
+    private ListNode ListnodeFactory(ArrayList arraylist, int contatore) {
+        ListNode listnode = new ListNode();
+
+        listnode.val = (int) arraylist.get(contatore);
+
+        if (arraylist.size() - 1 > contatore) {
+            contatore++;
+            listnode.next = ListnodeFactory(arraylist, contatore);
+        }
+        return listnode;
+    }
 }
